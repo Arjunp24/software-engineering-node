@@ -1,11 +1,25 @@
-import express, {Request, Response} from 'express';
+import express from 'express';
+import UserController from "../software-engineering-node/controllers/UserController";
+import UserDao from "./daos/UserDao";
+import mongoose from "mongoose";
+import TuitDao from "./daos/TuitDao";
+import TuitController from "./controllers/TuitController";
+
+
+mongoose.connect('mongodb+srv://mongo:mongo@cluster0.wnv1f.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
 const app = express();
+app.use(express.json())
 
-app.get('/hello', (req: Request, res: Response) =>
-    res.send('Hello World!'));
+const  userDao = new UserDao();
+const userController = new UserController(app, userDao)
 
-app.get('/add/:a/:b', (req: Request, res: Response) =>
-    res.send(req.params.a + req.params.b));
+const  tuitDao = new TuitDao();
+const tuitController = new TuitController(app, tuitDao)
+
+
+app.get('/hello', (req, res) =>
+    res.send('Hello Arun!'));
+
 
 const PORT = 4000;
 app.listen(process.env.PORT || PORT);
