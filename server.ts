@@ -1,5 +1,6 @@
 import express from 'express';
-import UserController from "../software-engineering-node/controllers/UserController";
+// import UserController from "../software-engineering-node/controllers/UserController";
+import UserController from "./controllers/UserController";
 import UserDao from "./daos/UserDao";
 import mongoose from "mongoose";
 import TuitDao from "./daos/TuitDao";
@@ -18,7 +19,7 @@ const tuitController = new TuitController(app, tuitDao)
 
 
 app.get('/hello', (req, res) =>
-    res.send('Hello Arun!'));
+    res.send('Hello Arjun!'));
 
 
 const PORT = 4000;
