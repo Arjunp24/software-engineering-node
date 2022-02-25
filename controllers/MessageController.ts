@@ -1,25 +1,25 @@
 /**
- * @file Controller RESTful Web service API for likes resource
+ * @file Controller RESTful Web service API for messages resource
  */
 import {Express, Request, Response} from "express";
 import MessageDao from "../daos/MessageDao";
 import MessageControllerI from "../interfaces/MessageControllerI";
 
 /**
- * @class TuitController Implements RESTful Web service API for likes resource.
+ * @class MessageController Implements RESTful Web service API for messages resource.
  * Defines the following HTTP endpoints:
  * <ul>
- *     <li>GET /api/users/:uid/likes to retrieve all the tuits liked by a user
+ *     <li>GET /users/:uid/messages/sent to retrieve all the messages sent by a user
  *     </li>
- *     <li>GET /api/tuits/:tid/likes to retrieve all users that liked a tuit
+ *     <li>GET /users/:uid/messages/received to retrieve all the messages received by a user
  *     </li>
- *     <li>POST /api/users/:uid/likes/:tid to record that a user likes a tuit
+ *     <li>POST /users/:u1id/messages/:u2id/:message to record that a user sends a message to another user
  *     </li>
- *     <li>DELETE /api/users/:uid/unlikes/:tid to record that a user
- *     no londer likes a tuit</li>
+ *     <li>DELETE /users/:uid/messages/:message to record that a user unsends a message sent to another user
+ *     </li>
  * </ul>
- * @property {LikeDao} likeDao Singleton DAO implementing likes CRUD operations
- * @property {LikeController} LikeController Singleton controller implementing
+ * @property {MessageDao} messageDao Singleton DAO implementing likes CRUD operations
+ * @property {MessageController} MessageController Singleton controller implementing
  * RESTful Web service API
  */
 export default class MessageController implements MessageControllerI {
@@ -29,7 +29,7 @@ export default class MessageController implements MessageControllerI {
      * Creates singleton controller instance
      * @param {Express} app Express instance to declare the RESTful Web service
      * API
-     * @return TuitController
+     * @return MessageController
      */
     public static getInstance = (app: Express): MessageController => {
         if(MessageController.messageController === null) {
@@ -37,7 +37,7 @@ export default class MessageController implements MessageControllerI {
             app.get("/users/:uid/messages/sent", MessageController.messageController.findAllSentMessagesByUser);
             app.get("/users/:uid/messages/received", MessageController.messageController.findAllReceivedMessagesByUser);
             app.post("/users/:u1id/messages/:u2id/:message", MessageController.messageController.sendMessage);
-            app.delete("/users/:u1id/messages/:message", MessageController.messageController.deleteMessage);
+            app.delete("/users/:u1id/messages/:u2id/:message", MessageController.messageController.deleteMessage);
         }
         return MessageController.messageController;
     }
@@ -45,22 +45,22 @@ export default class MessageController implements MessageControllerI {
     private constructor() {}
 
     /**
-     * Retrieves all users that liked a tuit from the database
+     * Retrieves all messages sent by a user from the database
      * @param {Request} req Represents request from client, including the path
-     * parameter tid representing the liked tuit
+     * parameter uid representing the user
      * @param {Response} res Represents response to client, including the
-     * body formatted as JSON arrays containing the user objects
+     * body formatted as JSON arrays containing the message objects
      */
     findAllSentMessagesByUser = (req: Request, res: Response) =>
         MessageController.messageDao.findAllSentMessagesByUser(req.params.uid)
             .then(messages => res.json(messages));
 
     /**
-     * Retrieves all tuits liked by a user from the database
+     * Retrieves all messages received by a user from the database
      * @param {Request} req Represents request from client, including the path
-     * parameter uid representing the user liked the tuits
+     * parameter uid representing the user
      * @param {Response} res Represents response to client, including the
-     * body formatted as JSON arrays containing the tuit objects that were liked
+     * body formatted as JSON arrays containing the message objects
      */
     findAllReceivedMessagesByUser = (req: Request, res: Response) =>
         MessageController.messageDao.findAllReceivedMessagesByUser(req.params.uid)
@@ -68,10 +68,9 @@ export default class MessageController implements MessageControllerI {
 
     /**
      * @param {Request} req Represents request from client, including the
-     * path parameters uid and tid representing the user that is liking the tuit
-     * and the tuit being liked
+     * path parameters u1id and u2id representing the user sending a message to another user
      * @param {Response} res Represents response to client, including the
-     * body formatted as JSON containing the new likes that was inserted in the
+     * body formatted as JSON containing the new messages that was inserted in the
      * database
      */
     sendMessage = (req: Request, res: Response) =>
@@ -80,12 +79,11 @@ export default class MessageController implements MessageControllerI {
 
     /**
      * @param {Request} req Represents request from client, including the
-     * path parameters uid and tid representing the user that is unliking
-     * the tuit and the tuit being unliked
+     * path parameters u1id and u2id representing the user deleting a message sent to another user
      * @param {Response} res Represents response to client, including status
-     * on whether deleting the like was successful or not
+     * on whether deleting the message was successful or not
      */
     deleteMessage = (req: Request, res: Response) =>
-        MessageController.messageDao.deleteMessage(req.params.u1id, req.params.message)
+        MessageController.messageDao.deleteMessage(req.params.u1id, req.params.u2id, req.params.message)
             .then(status => res.send(status));
 };

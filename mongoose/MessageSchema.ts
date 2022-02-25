@@ -1,3 +1,6 @@
+/**
+ * @file Defines the schema for documents in the messages collection.
+ */
 import mongoose, {Schema} from "mongoose";
 import Message from "../models/Message";
 
