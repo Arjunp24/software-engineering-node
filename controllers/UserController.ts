@@ -30,6 +30,15 @@ export default class UserController implements UserControllerI {
         this.app.post('/users', this.createUser);
         this.app.delete('/users/:userid', this.deleteUser);
         this.app.put('/users/:userid', this.updateUser);
+
+        // testing
+        app.get("/api/users", this.findAllUsers);
+        app.get("/api/users/:uid", this.findUserById);
+        app.post("/api/users", this.createUser);
+        app.put("/api/users/:uid", this.updateUser);
+        app.delete("/api/users/:uid", this.deleteUser);
+        app.delete("/api/users", this.deleteAllUsers);
+        app.get("/api/users/username/:username/delete", this.deleteUsersByUsername);
     }
 
     /**
@@ -87,4 +96,13 @@ export default class UserController implements UserControllerI {
     updateUser = (req: Request, res: Response) =>
         this.userDao.updateUser(req.params.userid, req.body)
             .then(status => res.json(status));
+
+    deleteAllUsers = (req: Request, res: Response) =>
+        this.userDao.deleteAllUsers()
+            .then((status) => res.send(status));
+
+    deleteUsersByUsername = (req: Request, res: Response) =>
+        this.userDao.deleteUsersByUsername(req.params.username)
+            .then(status => res.send(status));
+
 }

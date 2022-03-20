@@ -23,12 +23,14 @@ import LikeController from "./controllers/LikeController";
 import FollowController from "./controllers/FollowController";
 import BookmarkController from "./controllers/BookmarkController";
 import MessageController from "./controllers/MessageController";
+var cors = require('cors')
 
 
 // connecting to database
 mongoose.connect('mongodb+srv://mongo:mongo@cluster0.wnv1f.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
 const app = express();
 app.use(express.json())
+app.use(cors());
 
 
 // create RESTful Web service API
