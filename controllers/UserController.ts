@@ -34,6 +34,7 @@ export default class UserController implements UserControllerI {
         // testing
         app.get("/api/users", this.findAllUsers);
         app.get("/api/users/:uid", this.findUserById);
+        app.get("/api/users/:username/id", this.findIdByUsername);
         app.post("/api/users", this.createUser);
         app.put("/api/users/:uid", this.updateUser);
         app.delete("/api/users/:uid", this.deleteUser);
@@ -63,6 +64,11 @@ export default class UserController implements UserControllerI {
     findUserById = (req: Request, res: Response) =>
         this.userDao.findUserById(req.params.userid)
             .then(user => res.json(user));
+
+    findIdByUsername = (req: Request, res: Response) =>
+        this.userDao.findIdByUsername(req.params.username)
+            .then(user => res.json(user));
+
     /**
      * Creates a new user instance
      * @param {Request} req Represents request from client, including body

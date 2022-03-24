@@ -34,6 +34,15 @@ export default class TuitController implements TuitControllerI {
         this.app.post('/tuits', this.createTuit);
         this.app.delete('/tuits/:tid', this.deleteTuit);
         this.app.put('/tuits/:tid', this.updateTuit);
+
+        // testing
+        app.get("/api/tuits", this.findAllTuits);
+        app.get("/api/tuits/:tid", this.findTuitById);
+        app.post("/api/tuits", this.createTuit);
+        // app.put("/api/users/:uid", this.updateUser);
+        app.delete("/api/tuits/:tid", this.deleteTuit);
+        // app.delete("/api/users", this.deleteAllUsers);
+        // app.get("/api/users/username/:username/delete", this.deleteUsersByUsername);
     }
     /**
      * Retrieves all tuits from the database and returns an array of tuits.
